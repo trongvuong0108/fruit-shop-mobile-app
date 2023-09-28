@@ -1,2 +1,4 @@
-package com.code.Model;public class MailRequest {
+package com.code.Model;
+
+public class MailRequest {
 }

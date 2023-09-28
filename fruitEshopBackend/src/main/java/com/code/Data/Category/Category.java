@@ -1,4 +1,4 @@
-package com.code.Entity;
+package com.code.Data.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class category {
+public class Category {
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY

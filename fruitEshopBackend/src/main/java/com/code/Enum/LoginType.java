@@ -1,2 +1,4 @@
-package com.code.Enum;public enum LoginType {
+package com.code.Enum;
+
+public enum LoginType {
 }

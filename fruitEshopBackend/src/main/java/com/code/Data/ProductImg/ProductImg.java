@@ -1,4 +1,4 @@
-package com.code.Entity;
+package com.code.Data.ProductImg;
 
 import com.code.Data.Product.Product;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class productImg {
+public class ProductImg {
     @Id
     @Column(
             name = "id",

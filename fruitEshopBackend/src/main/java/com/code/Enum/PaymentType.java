@@ -1,11 +1,11 @@
 package com.code.Enum;
 
 
-public enum paymentType {
+public enum PaymentType {
     COD("COD"),
     MOMO("MOMO");
     private String name ;
-    paymentType(String name) {
+    PaymentType(String name) {
         this.name = name;
     }
 

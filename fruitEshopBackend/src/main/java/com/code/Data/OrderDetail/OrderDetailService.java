@@ -1,19 +1,19 @@
 package com.code.Data.OrderDetail;
 
 
-import com.code.Entity.detailBill;
-import com.code.Data.OrderDetail.detail_BillRepository;
-import com.code.Data.OrderDetail.detail_BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class detail_BilllServiceImpl implements detail_BillService {
-    @Autowired
-    private detail_BillRepository detail_billRepository;
+public class OrderDetailService implements IOrderDetailService {
+    private final IOrderDetailRepository orderDetailRepository;
+
+    public OrderDetailService(IOrderDetailRepository orderDetailRepository) {
+        this.orderDetailRepository = orderDetailRepository;
+    }
 
     @Override
-    public void save(detailBill detail_bill) {
-        detail_billRepository.save(detail_bill);
+    public void save(OrderDetail orderDetail) {
+        orderDetailRepository.save(orderDetail);
     }
 }

@@ -1,4 +1,4 @@
-package com.code.Entity;
+package com.code.Data.OrderDetail;
 
 import com.code.Data.Order.Order;
 import com.code.Data.Product.Product;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class detailBill {
+public class OrderDetail {
     @Id
     @Column(
             name = "id",

@@ -1,11 +1,11 @@
 package com.code.Enum;
 
-public enum tokenType {
+public enum TokenType {
         SIGNUP("SIGNUP"),
         REPASSWORD("REPASSWORD");
         private String text;
 
-        tokenType(String text) {
+        TokenType(String text) {
             this.text = text;
         }
 

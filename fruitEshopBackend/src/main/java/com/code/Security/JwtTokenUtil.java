@@ -1,4 +1,4 @@
-package com.code.ServiceIMPL.Security;
+package com.code.Security;
 
 import com.code.Data.Account.Account;
 import com.code.Data.Account.IAccountService;
@@ -15,15 +15,16 @@ import java.util.Map;
 import java.util.function.Function;
 @Service
 public class JwtTokenUtil  {
-    @Autowired
-    private IAccountService accountService ;
-    //private static final long serialVersionUID = 234234523523L;
+    private final IAccountService accountService ;
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
 
     private String secretKey ="secretkey123";
 
-    //retrieve username from jwt token
+    public JwtTokenUtil(IAccountService accountService) {
+        this.accountService = accountService;
+    }
+
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
@@ -54,10 +55,13 @@ public class JwtTokenUtil  {
         Account account  = accountService.getByUserName(userDetails.getUsername());
         return doGenerateToken(claims, account);
     }
-
     private String doGenerateToken(Map<String, Object> claims, Account account) {
         return Jwts.builder().setClaims(claims)
-                .setSubject(account.getUsername())
+                .setSubject(account.getId().toString())
+                .setSubject(account.getEmail())
+                .setSubject(account.getAddress())
+                .setSubject(account.getUserRole().getText())
+                .setSubject(account.getPhone())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secretKey).compact();

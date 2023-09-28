@@ -1,15 +1,13 @@
-package com.code.Entity;
+package com.code.Data.Account;
 
 
-import com.code.Enum.role;
+import com.code.Enum.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.UUID;
-
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,6 +41,6 @@ public class Account {
     private String email;
     private String address;
     private String phone ;
-    private role userRole;
+    private Role userRole;
     private boolean enable ;
 }

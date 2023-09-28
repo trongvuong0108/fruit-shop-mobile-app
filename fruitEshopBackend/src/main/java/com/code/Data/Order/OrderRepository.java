@@ -1,7 +1,7 @@
-package com.code.Repository;
+package com.code.Data.Order;
 
-import com.code.Entity.bill;
+import com.code.Data.Order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface billRepository extends JpaRepository<bill,Integer> {
+public interface OrderRepository extends JpaRepository<Order,Integer> {
 }

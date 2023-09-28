@@ -1,2 +1,4 @@
-package com.code;public class AccountUnitTest {
+package com.code;
+
+public class AccountUnitTest {
 }

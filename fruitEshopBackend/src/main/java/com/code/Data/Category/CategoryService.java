@@ -1,28 +1,29 @@
-package com.code.ServiceIMPL;
+package com.code.Data.Category;
 
-import com.code.Entity.category;
-import com.code.Service.categoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class categoryServiceImpl implements categoryService {
-    @Autowired
-    private com.code.Repository.categoryRepository categoryRepository;
+public class CategoryService implements ICategoryService {
+    private final ICategoryRepository categoryRepository;
+
+    public CategoryService(ICategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
     @Override
-    public List<category> getAll() {
+    public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public category findById(int id) {
+    public Category findById(int id) {
         return categoryRepository.findById(id).get();
     }
 
     @Override
-    public void save(category category) {
+    public void save(Category category) {
         categoryRepository.save(category);
     }
 }

@@ -1,2 +1,4 @@
-package com.code.Data.Account.DTO;public class GetAccountResponse {
+package com.code.Data.Account.DTO;
+
+public class GetAccountResponse {
 }

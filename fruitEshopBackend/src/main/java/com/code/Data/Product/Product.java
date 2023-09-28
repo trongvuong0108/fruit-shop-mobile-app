@@ -1,41 +1,46 @@
 package com.code.Data.Product;
 
 import com.code.Data.Category.Category;
-import lombok.AllArgsConstructor;
+import com.code.Data.Product.DTO.CreateOrUpdateProductRequest;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table
-public class Product {
+public class Product extends ProductBase {
     @Id
-    @Column(
-            name = "id",
-            nullable = false
-    )
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
-    private int id;
-    private String name ;
-    private float quantity;
-    private float price_in;
-    private float price_out;
-    private LocalDateTime day_Create;
-    private LocalDateTime day_Update;
-    private String img ;
+    @Column(name = "id", nullable = false)
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private UUID id;
     private boolean enable;
+    private String img;
+    private LocalDateTime dayCreate;
+    private LocalDateTime dayUpdate;
     @ManyToOne
-    @JoinColumn(
-            name = "category_id",
-            nullable = false,
-            referencedColumnName = "id"
-    )
+    @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id")
     private Category category;
+
+    public Product(
+            CreateOrUpdateProductRequest request,
+            String img,
+            boolean enable,
+            LocalDateTime dayCreate,
+            LocalDateTime dayUpdate
+    ) {
+        super(request);
+        this.category = request.getCategory();
+        this.img = img;
+        this.enable = enable;
+        this.dayCreate = dayCreate;
+        this.dayUpdate = dayUpdate;
+    }
+    public Product() {
+
+    }
 }
 

@@ -1,64 +1,70 @@
 package com.code.Controller;
 
-import com.code.Entity.bill;
-import com.code.Entity.detailBill;
-import com.code.Entity.product;
-import com.code.Model.billModel;
-import com.code.Model.responeBillModel;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.code.Data.Account.IAccountService;
+import com.code.Data.Order.IOrderService;
+import com.code.Data.OrderDetail.OrderDetailService;
+import com.code.Data.Product.IProductService;
+import com.code.Data.Order.Order;
+import com.code.Data.OrderDetail.OrderDetail;
+import com.code.Data.Product.Product;
+import com.code.Data.Order.DTO.CheckOutRequest;
+import com.code.Model.OrderResponse;
 import org.springframework.web.bind.annotation.*;
-import com.code.Service.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/bill")
-public class billController {
-    @Autowired
-    private billService billService ;
+public class BillController {
+    private final IOrderService billService ;
 
-    @Autowired
-    private productService productService ;
+    private final IProductService productService ;
 
-    @Autowired
-    private detail_BillService detail_BillService;
+    private final OrderDetailService orderDetailService;
 
-    @Autowired
-    private accountService accountService;
+    private final IAccountService accountService;
+
+    public BillController(IOrderService billService, IProductService productService, OrderDetailService orderDetailService, IAccountService accountService) {
+        this.billService = billService;
+        this.productService = productService;
+        this.orderDetailService = orderDetailService;
+        this.accountService = accountService;
+    }
 
     @PostMapping("/checkout")
-    public String save(@RequestBody billModel bill_model) throws Exception {
-        bill bill = new bill();
-        bill.setCreateAt(LocalDateTime.now());
-        bill.setName(bill_model.getName());
-        bill.setAddress(bill_model.getAddress());
-        bill.setPhone(bill_model.getPhone());
-        billService.save(bill);
-        for (com.code.Model.detail_BillModel detail_BillModel: bill_model.getDetailList()) {
-            product product = productService.findByName(detail_BillModel.getProductModel().getName());
-            if(product == null) throw new Exception("not find product");
-            if(product.getQuantity() < detail_BillModel.getQuality())
-                    throw new Exception("not enough");
-            else {
-                product.setQuantity(product.getQuantity() - detail_BillModel.getQuality()   );
-                productService.save(product);
-            }
-
-            detailBill detail_bill = new detailBill();
-            detail_bill.setProduct(product);
-            detail_bill.setQuality(detail_BillModel.getQuality());
-            detail_bill.setBill(bill);
-            detail_BillService.save(detail_bill);
-        }
+    public String save(@RequestBody CheckOutRequest bill_model) throws Exception {
+//        Order bill = new Order();
+//        bill.setCreateAt(LocalDateTime.now());
+//        bill.setName(bill_model.getName());
+//        bill.setAddress(bill_model.getAddress());
+//        bill.setPhone(bill_model.getPhone());
+//        billService.save(bill);
+//        for (com.code.Model.OrderDetail detail_BillModel: bill_model.getDetailList()) {
+//            Product product = productService.findByName(detail_BillModel.getProductModel().getName());
+//            if(product == null) throw new Exception("not find product");
+//            if(product.getQuantity() < detail_BillModel.getQuality())
+//                    throw new Exception("not enough");
+//            else {
+//                product.setQuantity(product.getQuantity() - detail_BillModel.getQuality()   );
+//                productService.save(product);
+//            }
+//
+//            OrderDetail detail_bill = new OrderDetail();
+//            detail_bill.setProduct(product);
+//            detail_bill.setQuality(detail_BillModel.getQuality());
+//            detail_bill.setBill(bill);
+//            orderDetailService.save(detail_bill);
+//        }
         return "ok";
     }
 
     @GetMapping("getAll")
-    public List<responeBillModel> getAll(){
-        List<responeBillModel> res = new ArrayList<>();
-        for (bill bill: billService.getAll()) {
-            responeBillModel responeBillModel = new responeBillModel();
+    public List<OrderResponse> getAll(){
+        List<OrderResponse> res = new ArrayList<>();
+        for (Order bill: billService.getAll()) {
+            OrderResponse responeBillModel = new OrderResponse();
             responeBillModel.setId(bill.getId());
             responeBillModel.setName(bill.getName());
             responeBillModel.setAddress(bill.getAddress());

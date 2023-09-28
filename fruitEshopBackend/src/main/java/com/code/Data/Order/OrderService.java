@@ -1,32 +1,29 @@
-package com.code.ServiceIMPL;
+package com.code.Data.Order;
 
-import com.code.Entity.bill;
-import com.code.Repository.billRepository;
-import com.code.Service.billService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class billServiceImpl implements billService {
+public class OrderService implements IOrderService {
     @Autowired
-    private billRepository billRepository ;
+    private OrderRepository billRepository ;
     @Override
-    public void save(bill bill) {
+    public void save(Order bill) {
         billRepository.save(bill);
     }
 
     @Override
-    public List<bill> getAll() {
+    public List<Order> getAll() {
         return billRepository.findAll();
     }
 
     @Override
-    public List<bill> getByUser(String name) {
-        List<bill> bills = getAll();
-        List<bill> result = new ArrayList<>();
-        for (bill bill: bills) {
+    public List<Order> getByUser(String name) {
+        List<Order> bills = getAll();
+        List<Order> result = new ArrayList<>();
+        for (Order bill: bills) {
             if(bill.getName().equals(name))
                 result.add(bill);
         }

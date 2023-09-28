@@ -1,90 +1,77 @@
 package com.code.Controller;
 
-import com.code.Entity.account;
-import com.code.Entity.token;
-import com.code.Enum.role;
-import com.code.Enum.tokenType;
+import com.code.Helper.CloudinaryHelper;
+import com.code.Data.Account.IAccountService;
+import com.code.Data.Account.Account;
+import com.code.Data.Token.ITokenService;
+import com.code.Data.Token.Token;
+import com.code.Enum.Role;
+import com.code.Enum.TokenType;
 import com.code.Model.*;
+import com.code.Services.MailService;
 import com.google.gson.Gson;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
-import com.code.Service.*;
+
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.Properties;
 
 @RestController
 @RequestMapping(value = "/account")
-public class accountController {
-    @Autowired
-    private accountService accountService;
+public class AccountController {
+    private final IAccountService accountService;
 
-    @Autowired
-    private tokenService tokenService;
+    private final ITokenService tokenService;
 
-    @Autowired
-    private JavaMailSender javaMailSender ;
 
-    public void sendEmail(String toEmail ,
-                          String subject,
-                          String body){
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom("ngaitrong0108@gmail.com");
-        mailMessage.setTo(toEmail);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(body);
-        javaMailSender.send(mailMessage);
+    private final MailService mailService;
+
+    public AccountController(IAccountService accountService, ITokenService tokenService, MailService mailService) {
+        this.accountService = accountService;
+        this.tokenService = tokenService;
+        this.mailService = mailService;
     }
-
-    @GetMapping(value = "/get")
-    public account get(@RequestParam("username") String username ){
-        if(accountService.getByUserName(username) == null) return new account();
-        return accountService.getByUserName(username);
+    @GetMapping(value = "/getAccountSimple")
+    public Account get(){
+        return new Account();
     }
 
 
-    @GetMapping(value = "/save")
+    @PostMapping(value = "/create")
     public HttpStatus save(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestParam("fullName") String fullName,
-            @RequestParam("email") String email,
-            @RequestParam("address") String address,
-            @RequestParam("phone") String phone
+
     ){
-        Uploader uploader = new Uploader();
-        account account = new account();
-        account.setUsername(username);
-        account.setPassword(password);
-        account.setFullName(fullName);
-        account.setEmail(email.trim());
-        account.setAddress(address);
-        account.setPhone(phone);
+        CloudinaryHelper uploader = new CloudinaryHelper();
+        Account account = new Account();
+//        account.setUsername(username);
+//        account.setPassword(password);
+//        account.setFullName(fullName);
+//        account.setEmail(email.trim());
+//        account.setAddress(address);
+//        account.setPhone(phone);
         account.setEnable(false);
-        account.setUserRole(role.CLIENT);
+        account.setUserRole(Role.CLIENT);
         accountService.save(account);
-        token signupToken = new token();
+        Token signupToken = new Token();
         signupToken.genNewToken();
         signupToken.setAccount(account);
-        signupToken.setTokenType(tokenType.SIGNUP);
+        signupToken.setTokenType(TokenType.SIGNUP);
         tokenService.save(signupToken);
-        sendEmail(account.getEmail(),"Token",signupToken.getToken());
+        mailService.sendEmail(account.getEmail(),"Token",signupToken.getToken());
         return HttpStatus.OK;
     }
 
     @GetMapping(value = "/genNewSignupToken")
-    public token genNewSignupToken(@RequestParam("username") String username){
-        account account = accountService.getByUserName(username);
-        token signupToken = new token();
+    public Token genNewSignupToken(@RequestParam("username") String username){
+        Account account = accountService.getByUserName(username);
+        Token signupToken = new Token();
         signupToken.genNewToken();
         signupToken.setAccount(account);
-        signupToken.setTokenType(tokenType.SIGNUP);
+        signupToken.setTokenType(TokenType.SIGNUP);
         tokenService.save(signupToken);
-        sendEmail(account.getEmail(),"Token",signupToken.getToken());
+        mailService.sendEmail(account.getEmail(),"Token",signupToken.getToken());
         return signupToken;
     }
 
@@ -92,14 +79,14 @@ public class accountController {
     public String confirmToken(
             @RequestParam("token") String token,
             @RequestParam("username") String username){
-        token signinToken = tokenService.findByToken(token);
+        Token signinToken = tokenService.findByToken(token);
         if(
                 signinToken.getAccount().getUsername().equals(username)&&
                 signinToken != null &&
-                signinToken.getTokenType() == tokenType.SIGNUP &&
+                signinToken.getTokenType() == TokenType.SIGNUP &&
                 signinToken.getExpiryAt().isAfter(LocalDateTime.now())
         ){
-            account account =signinToken.getAccount() ;
+            Account account =signinToken.getAccount() ;
             account.setEnable(true);
             accountService.save(account);
             return "Successful";
@@ -108,25 +95,25 @@ public class accountController {
     }
 
     @GetMapping(value = "/genNewChangePassToken")
-    public token genNewChangePassToken(@RequestParam("username") String username){
-        token changePassToken = new token();
-        account account = accountService.getByUserName(username);
+    public Token genNewChangePassToken(@RequestParam("username") String username){
+        Token changePassToken = new Token();
+        Account account = accountService.getByUserName(username);
         changePassToken.genNewToken();
         changePassToken.setAccount(account);
-        changePassToken.setTokenType(tokenType.REPASSWORD);
+        changePassToken.setTokenType(TokenType.REPASSWORD);
         tokenService.save(changePassToken);
-        sendEmail(account.getEmail(),"Token",changePassToken.getToken());
+        mailService.sendEmail(account.getEmail(),"Token",changePassToken.getToken());
         return changePassToken;
     }
 
     @GetMapping(value = "/confirmChangePassToken")
     public boolean confirmChangePassToken(@RequestParam("token") String token,
                                         @RequestParam("username") String username){
-        token changePassToken = tokenService.findByToken(token);
+        Token changePassToken = tokenService.findByToken(token);
         if(
                 changePassToken.getAccount().getUsername().equals(username)&&
                         changePassToken != null &&
-                        changePassToken.getTokenType() == tokenType.REPASSWORD &&
+                        changePassToken.getTokenType() == TokenType.REPASSWORD &&
                         changePassToken.getExpiryAt().isAfter(LocalDateTime.now())
         ){
             return true;
@@ -135,8 +122,8 @@ public class accountController {
     }
 
     @PostMapping(value = "/changePass")
-    public void confirmChangePassToken(@RequestBody rePassword rePassword) throws Exception {
-        account account = accountService.getByUserName(rePassword.getUsername());
+    public void confirmChangePassToken(@RequestBody ChangePasswordRequest rePassword) throws Exception {
+        Account account = accountService.getByUserName(rePassword.getUsername());
         if(account == null)
             throw new Exception("username not found");
         if(!rePassword.getPassword().equals(account.getPassword()))
@@ -151,8 +138,8 @@ public class accountController {
         String[] pieces = token.split("\\.");
         String b64payload = pieces[1];
         String jsonString = new String(Base64.decodeBase64(b64payload), "UTF-8");
-        jwtDecodeModel jwtDecodeModel = new Gson().fromJson(jsonString, jwtDecodeModel.class);
-        account accountResult = accountService.getByUserName(jwtDecodeModel.sub);
+        JwtDecodeModel jwtDecodeModel = new Gson().fromJson(jsonString, JwtDecodeModel.class);
+        Account accountResult = accountService.getByUserName(jwtDecodeModel.sub);
         prop.put("username" , accountResult.getUsername());
         prop.put("fullname" , accountResult.getFullName());
         prop.put("phone" , accountResult.getPhone());

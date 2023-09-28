@@ -1,4 +1,4 @@
-package com.code.Entity;
+package com.code.Data.Token;
 
 import com.code.Data.Account.Account;
 import com.code.Enum.TokenType;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table
-public class token {
+public class Token {
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY

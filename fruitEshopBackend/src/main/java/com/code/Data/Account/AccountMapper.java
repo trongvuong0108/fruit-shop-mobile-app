@@ -1,2 +1,4 @@
-package com.code.Data.Account;public interface AccountMapper {
+package com.code.Data.Account;
+
+public class AccountMapper {
 }

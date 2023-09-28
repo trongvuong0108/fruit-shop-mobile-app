@@ -1,6 +1,6 @@
 package com.code.Config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.code.Security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,12 +15,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
-public class webSercurity extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private  UserDetailsService userDetailService;
+public class WebSecurity extends WebSecurityConfigurerAdapter {
+    private final UserDetailsService userDetailService;
 
-    @Autowired
-    private com.code.ServiceIMPL.Security.jwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
+
+    public WebSecurity(UserDetailsService userDetailService, JwtFilter jwtFilter) {
+        this.userDetailService = userDetailService;
+        this.jwtFilter = jwtFilter;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -1,2 +1,6 @@
-package com.code.Data.Product.DTO;public class Action {
+package com.code.Enum;
+
+public enum Action {
+    CREATE,
+    UPDATE
 }

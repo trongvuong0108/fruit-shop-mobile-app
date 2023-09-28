@@ -1,7 +1,6 @@
 package com.code.Controller;
 
-import com.code.Model.jwtRequest;
-import com.code.Model.jwtResponse;
+import com.code.Model.LoginRequest;
 import com.code.Security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class loginController {
-    @Autowired
-    private AuthenticationManager authenticationManager ;
+public class LoginController {
+    private final AuthenticationManager authenticationManager ;
+    private final UserDetailsService userDetailsService;
+    private final JwtTokenUtil jwtTokenUtil;
+    public LoginController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
     @PostMapping(value = "/auth")
-    public ResponseEntity<?> createToken(@RequestBody jwtRequest jwtRequest) throws Exception{
+    public ResponseEntity<?> createToken(@RequestBody LoginRequest jwtRequest) throws Exception{
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -37,10 +37,8 @@ public class loginController {
         catch (BadCredentialsException e){
             throw new Exception("Incorect....",e);
         }
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(
-                jwtRequest.getUsername()
-        );
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
         final String jwt = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new jwtResponse(jwt));
+        return ResponseEntity.ok(jwt);
     }
 }

@@ -1,4 +1,4 @@
-package com.code.Entity;
+package com.code.Data.Order;
 
 
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "Bill")
-public class bill {
+public class Order {
     @Id
     @Column(
             name = "id",

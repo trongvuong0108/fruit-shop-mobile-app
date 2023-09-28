@@ -1,11 +1,11 @@
-package com.code.Service;
+package com.code.Data.Order;
 
-import com.code.Entity.bill;
+import com.code.Data.Order.Order;
 
 import java.util.List;
 
-public interface billService {
-    public void save(bill bill);
-    public List<bill> getByUser(String username);
-    public List<bill> getAll();
+public interface IOrderService {
+    public void save(Order bill);
+    public List<Order> getByUser(String username);
+    public List<Order> getAll();
 }

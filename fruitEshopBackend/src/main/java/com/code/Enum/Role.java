@@ -1,13 +1,16 @@
 package com.code.Enum;
 
-public enum role {
+import lombok.Data;
+
+
+public enum Role {
     CLIENT("CLIENT"),
     ADMIN("ADMIN"),
     SUPER_ADMIN("SUPER_ADMIN");
 
     private String text;
 
-    role(String text) {
+    Role(String text) {
         this.text = text;
     }
 

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class ProductResponse {
     private String name ;
-    private float price_out;
+    private float priceOut;
     private Category category;
     private String img;
     private float quantity;

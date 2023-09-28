@@ -3,7 +3,7 @@ package com.code.Model;
 import lombok.Data;
 
 @Data
-public class responeBillModel {
+public class OrderResponse {
     private int id;
     private String createAt ;
     private String name;

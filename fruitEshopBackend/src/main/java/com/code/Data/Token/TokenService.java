@@ -1,24 +1,24 @@
 package com.code.Data.Token;
 
-import com.code.Entity.token;
-
-import com.code.Data.Token.tokenRepository;
-import com.code.Data.Token.tokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class tokenServiceImpl implements tokenService {
+public class TokenService implements ITokenService {
 
-    @Autowired
-    private tokenRepository tokenRepository;
+    private final ITokenRepository tokenRepository;
+
+    public TokenService(ITokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
     @Override
-    public token findByToken(String token) {
+    public Token findByToken(String token) {
         return tokenRepository.findByToken(token);
     }
 
     @Override
-    public void save(token signin_Token) {
-        tokenRepository.save(signin_Token);
+    public void save(Token token) {
+        tokenRepository.save(token);
     }
 }

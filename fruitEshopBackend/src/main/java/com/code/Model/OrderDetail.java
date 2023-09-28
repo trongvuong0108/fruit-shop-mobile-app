@@ -4,7 +4,7 @@ import com.code.Data.Product.DTO.ProductResponse;
 import lombok.Data;
 
 @Data
-public class detail_BillModel {
+public class OrderDetail {
     private ProductResponse productModel ;
     private float quality;
 }
