@@ -1,7 +1,5 @@
 package com.code.Data.Order;
 
-import com.code.Data.Order.Order;
-
 import java.util.List;
 
 public interface IOrderService {

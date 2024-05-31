@@ -3,8 +3,6 @@ package com.code.Data.Product;
 import com.code.Data.Product.DTO.CreateOrUpdateProductRequest;
 import com.code.Enum.Action;
 import com.code.Services.FileUploadService;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,7 +48,7 @@ public class ProductService implements IProductService {
 
     @Override
     public void delete(int id) {
-        productRepo.delete(productRepo.findById(id).get());
+        productRepo.deleteById(id);
     }
 
     @Override

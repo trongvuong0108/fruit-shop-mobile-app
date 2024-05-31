@@ -3,58 +3,48 @@ package com.code.Config;
 import com.code.Security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @EnableWebSecurity
 @Configuration
-public class WebSecurity extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailService;
+public class WebSecurity {
 
     private final JwtFilter jwtFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final LogoutHandler logoutHandler;
 
-    public WebSecurity(UserDetailsService userDetailService, JwtFilter jwtFilter) {
-        this.userDetailService = userDetailService;
+    public WebSecurity(JwtFilter jwtFilter, AuthenticationProvider authenticationProvider, LogoutHandler logoutHandler) {
         this.jwtFilter = jwtFilter;
+        this.authenticationProvider = authenticationProvider;
+        this.logoutHandler = logoutHandler;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(
-                userDetailService
-        );
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-        http.cors().and().csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/auth/**","/home/**","/account/**","/bill/**")
-                .permitAll()
-//                .anyRequest()
-//                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-    @Override
-    @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        return http
+                .authorizeHttpRequests(
+                        (authorize) -> authorize
+                            .requestMatchers("/auth/**","/home/**","/account/**","/bill/**")
+                            .hasAuthority("USER")
+                            .anyRequest().authenticated()
+                    )
+                .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
+
 }
 

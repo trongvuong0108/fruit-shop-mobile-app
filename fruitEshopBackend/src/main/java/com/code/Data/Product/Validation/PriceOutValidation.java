@@ -1,6 +1,5 @@
 package com.code.Data.Product.Validation;
 
-import com.code.Data.Product.Product;
 import com.code.Data.Product.ProductBase;
 
 import javax.validation.ConstraintValidator;

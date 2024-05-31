@@ -1,13 +1,14 @@
 package com.code.Controller;
 
-import com.code.Helper.CloudinaryHelper;
-import com.code.Data.Account.IAccountService;
 import com.code.Data.Account.Account;
+import com.code.Data.Account.IAccountService;
 import com.code.Data.Token.ITokenService;
 import com.code.Data.Token.Token;
 import com.code.Enum.Role;
 import com.code.Enum.TokenType;
-import com.code.Model.*;
+import com.code.Helper.CloudinaryHelper;
+import com.code.Model.ChangePasswordRequest;
+import com.code.Model.JwtDecodeModel;
 import com.code.Services.MailService;
 import com.google.gson.Gson;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -40,10 +41,7 @@ public class AccountController {
 
 
     @PostMapping(value = "/create")
-    public HttpStatus save(
-
-    ){
-        CloudinaryHelper uploader = new CloudinaryHelper();
+    public HttpStatus save(){
         Account account = new Account();
 //        account.setUsername(username);
 //        account.setPassword(password);

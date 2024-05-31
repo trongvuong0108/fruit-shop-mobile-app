@@ -1,8 +1,5 @@
 package com.code.Enum;
 
-import lombok.Data;
-
-
 public enum Role {
     CLIENT("CLIENT"),
     ADMIN("ADMIN"),

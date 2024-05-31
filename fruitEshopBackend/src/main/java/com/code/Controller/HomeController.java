@@ -1,12 +1,10 @@
 package com.code.Controller;
 
-import com.code.Data.Category.ICategoryService;
-import com.code.Data.Product.IProductService;
-import com.code.Data.Product.Product;
-import com.code.Data.ProductImg.IProductImgService;
-import com.code.Data.ProductImg.ProductImg;
 import com.code.Data.Category.Category;
+import com.code.Data.Category.ICategoryService;
 import com.code.Data.Product.DTO.ProductResponse;
+import com.code.Data.Product.IProductService;
+import com.code.Data.ProductImg.IProductImgService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

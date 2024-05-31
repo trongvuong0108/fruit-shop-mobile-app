@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -43,12 +42,17 @@ public class AccountService implements IAccountService, UserDetailsService {
     }
 
     @Override
+    public void softDelete(int id) {
+        accountRepository.findById(id).ifPresent(account -> {account.setEnable(false);});
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = getByUserName(username);
-        if(account == null ) throw new UsernameNotFoundException("User not find");
+        if(account == null) throw new UsernameNotFoundException("User not find");
         Set<GrantedAuthority> auth = new HashSet<>();
         auth.add(new SimpleGrantedAuthority(account.getUserRole().getText()));
         return  new org.springframework.security.core.userdetails
-                .User(account.getUsername(),account.getPassword(),true,true,true,true,auth);
+                .User(account.getUsername(),account.getPassword(),account.isEnable(),true,true,true,auth);
     }
 }

@@ -2,11 +2,11 @@ package com.code.Data.OrderDetail;
 
 import com.code.Data.Order.Order;
 import com.code.Data.Product.Product;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
